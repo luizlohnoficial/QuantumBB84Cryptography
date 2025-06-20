@@ -1,9 +1,13 @@
 # Importando bibliotecas necessárias
+import os
 import criptografar
 import descriptografar
 
 
-SenhaFornecida = list(input("Digite uma palavra para enviar: "))
+password = os.getenv("PASSWORD")
+if password is None:
+    password = input("Digite uma palavra para enviar: ")
+SenhaFornecida = list(password)
 print(f"Mensagem: {SenhaFornecida}")
 
 # Criptografa usando OTP para cada caracter
