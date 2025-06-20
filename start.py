@@ -7,7 +7,7 @@ import descriptografar
 password = "Testando12"
 if password is None:
     password = input("Digite uma palavra para enviar: ")
-SenhaFornecida = list(password)
+SenhaFornecida = password
 print(f"Mensagem: {SenhaFornecida}")
 
 # Criptografa usando OTP para cada caracter
