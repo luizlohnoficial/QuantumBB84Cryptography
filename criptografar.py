@@ -5,7 +5,7 @@ try:
     import qsharp  # opcional para execuções reais em Q#
     from CriptBB84 import KeyBB84, RandomBit
     HAS_QSHARP = True
-except ImportError:  # ambiente sem dependências do Q#
+except Exception:  # ambiente sem dependências do Q# ou falha ao compilar
     HAS_QSHARP = False
 
 
