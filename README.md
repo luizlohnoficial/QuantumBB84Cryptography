@@ -13,5 +13,6 @@ Caso o pacote `qsharp` não esteja disponível (por exemplo em ambientes sem
 acesso à internet), a implementação em `criptografar.py` utiliza um modo de
 simulação em Python para gerar as chaves aleatórias.
 
-Uma pipeline de exemplo em `.github/workflows/ci.yml` executa o script com a
-senha fornecida pela variável secreta `PASSWORD` do GitHub.
+Uma pipeline de exemplo em `.github/workflows/ci.yml` permite acionar o
+processo manualmente informando a senha como parâmetro. A senha também pode
+ser lida do segredo `PASSWORD` quando a execução não é disparada manualmente.
