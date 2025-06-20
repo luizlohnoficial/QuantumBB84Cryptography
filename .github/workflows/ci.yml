@@ -15,7 +15,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PASSWORD: ${{ github.event.inputs.password || secrets.PASSWORD }}
+      PASSWORD: SENHADAPIPELINE
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
