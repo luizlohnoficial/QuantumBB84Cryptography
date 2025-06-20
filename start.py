@@ -4,7 +4,7 @@ import criptografar
 import descriptografar
 
 #os.getenv("PASSWORD")
-password = "Testando12
+password = "Testando12"
 if password is None:
     password = input("Digite uma palavra para enviar: ")
 SenhaFornecida = list(password)
