@@ -3,8 +3,15 @@ import os
 import criptografar
 import descriptografar
 
-#os.getenv("PASSWORD")
-password = "Testando12"
+if not password:
+    try:
+        password = input("Digite uma palavra para enviar: ")
+    except EOFError:
+        raise SystemExit("Nenhuma senha fornecida")
+
+# remove aspas extras e quebras de linha caso venham de variáveis de ambiente
+password = password.strip().strip('"').strip("'")
+
 if password is None:
     password = input("Digite uma palavra para enviar: ")
 SenhaFornecida = password
