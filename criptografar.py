@@ -1,5 +1,8 @@
 # Importando bibliotecas necessárias
 import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 try:
     import qsharp  # opcional para execuções reais em Q#
@@ -44,9 +47,9 @@ def GeraChaveCompartilhada():
             UserOrigenBase = QubitsRandonBits(tam)
             UserDestinoBase = QubitsRandonBits(tam)
 
-            print(f"UserOrigen     : {UserOrigen}")
-            print(f"UserOrigenBase : {UserOrigenBase}")
-            print(f"UserDestinoBase: {UserDestinoBase}")
+            logger.debug("UserOrigen     : %s", UserOrigen)
+            logger.debug("UserOrigenBase : %s", UserOrigenBase)
+            logger.debug("UserDestinoBase: %s", UserDestinoBase)
 
             key = KeyBB84.simulate(
                 AliceBits=UserOrigen,
@@ -54,11 +57,11 @@ def GeraChaveCompartilhada():
                 BobBase=UserDestinoBase,
                 n=tam,
             )
-            print(f"key sendo unida: {key}")
+            logger.debug("key sendo unida: %s", key)
 
         key = [str(i) for i in key]
         key = "".join(key)
-        print(f"key apenas converter lista: {key}")
+        logger.debug("key apenas converter lista: %s", key)
         return key
     else:
         # Sem suporte a Q#, gera uma chave de 8 bits pseudoaleatória
@@ -67,12 +70,12 @@ def GeraChaveCompartilhada():
 
 
 def CriptografaCaracter(c, key):
-    print(f"C ORD: {ord(c)}")
-    print(f"int(key, 2)) % 255: {int(key, 2) % 255}")
+    logger.debug("C ORD: %s", ord(c))
+    logger.debug("int(key, 2) % 255: %s", int(key, 2) % 255)
 
     c = (ord(c) + int(key, 2)) % 255
-    print(f"criptografa caractere: {c}")
-    print(f"bin: {bin(c)}")
+    logger.debug("criptografa caractere: %s", c)
+    logger.debug("bin: %s", bin(c))
 
     return bin(c)
 
@@ -85,6 +88,6 @@ def CriptografaMensagem(SenhaFornecida):
         key = GeraChaveCompartilhada()
         Keys.append(key)
         Msg_Cript.append(CriptografaCaracter(i, key))
-        print(f"CriptografaMensagemKey: {key}")
-        print(f"CriptografaMensagemMSG: {Msg_Cript}")
+        logger.debug("CriptografaMensagemKey: %s", key)
+        logger.debug("CriptografaMensagemMSG: %s", Msg_Cript)
     return (Msg_Cript, Keys)
