@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      PASSWORD: ${{ secrets.PASSWORD }}
+      PASSWORD: Testando1234
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
