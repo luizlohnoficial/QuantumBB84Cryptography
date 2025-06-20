@@ -1,8 +1,15 @@
 # Importando bibliotecas necessárias
-import qsharp
 import random
+import logging
 
-from CriptBB84 import KeyBB84,  RandomBit
+logger = logging.getLogger(__name__)
+
+try:
+    import qsharp  # opcional para execuções reais em Q#
+    from CriptBB84 import KeyBB84, RandomBit
+    HAS_QSHARP = True
+except Exception:  # ambiente sem dependências do Q# ou falha ao compilar
+    HAS_QSHARP = False
 
 
 def GenerateRandonBits(n):
@@ -16,48 +23,59 @@ def GenerateRandonBits(n):
 # range: retorna uma sequência de números *
 # simulate irá simular a execução da função GenerateRandonBits
 def QubitsRandonBits(n):
+    """Retorna um vetor de bits aleatórios.
+
+    Quando a dependência qsharp está disponível, utiliza as simulações em Q#.
+    Caso contrário, gera bits pseudoaleatórios em Python para fins de teste.
+    """
     vetor = []
-    for i in range(n):
-        vetor.append(RandomBit.simulate())
+    for _ in range(n):
+        if HAS_QSHARP:
+            vetor.append(RandomBit.simulate())
+        else:
+            vetor.append(random.randint(0, 1))
     return vetor
 
 
 def GeraChaveCompartilhada():
-    key = []  # vetor inicial
-    while len(key) <= 8:  # necessário 8 bits para representar qualquer valor da ASCII
-        # numero n de bits/qubits que serão utilizados
-        tam = 16  # Cria vetores de bits de tamanho n aleatórios
-        # Origien gera n bits aleatórios de mensagem
-        UserOrigen = QubitsRandonBits(tam)
-        # Usuário Origen gera uma base de bits aleatórios onde serão aplicados a H
-        UserOrigenBase = QubitsRandonBits(tam)
-        # Usuário Destino  gera uma base de bits aleatórios onde serão aplicados a H
-        UserDestinoBase = QubitsRandonBits(tam)
-        # Faz a simulação com as bases aleatórias definidas e cria uma chave compartilhada
+    """Gera uma chave compartilhada simulando o protocolo BB84."""
+    if HAS_QSHARP:
+        key = []  # vetor inicial
+        while len(key) <= 8:  # necessário 8 bits para representar qualquer valor da ASCII
+            tam = 16
+            UserOrigen = QubitsRandonBits(tam)
+            UserOrigenBase = QubitsRandonBits(tam)
+            UserDestinoBase = QubitsRandonBits(tam)
 
-        print(f"UserOrigen     : {UserOrigen}")
-        print(f"UserOrigenBase : {UserOrigenBase}")
-        print(f"UserDestinoBase: {UserDestinoBase}")
+            logger.debug("UserOrigen     : %s", UserOrigen)
+            logger.debug("UserOrigenBase : %s", UserOrigenBase)
+            logger.debug("UserDestinoBase: %s", UserDestinoBase)
 
-        key = KeyBB84.simulate(
-            AliceBits=UserOrigen, AliceBase=UserOrigenBase, BobBase=UserDestinoBase, n=tam)
-        print(f"key sendo unida: {key}")
+            key = KeyBB84.simulate(
+                AliceBits=UserOrigen,
+                AliceBase=UserOrigenBase,
+                BobBase=UserDestinoBase,
+                n=tam,
+            )
+            logger.debug("key sendo unida: %s", key)
 
-    # converte a lista de inteiros para uma string binária
-    for i in range(len(key)):
-        key[i] = str(key[i])
-    key = "".join(key)
-    print(f"key apenas converter lista: {key}")
-    return key
+        key = [str(i) for i in key]
+        key = "".join(key)
+        logger.debug("key apenas converter lista: %s", key)
+        return key
+    else:
+        # Sem suporte a Q#, gera uma chave de 8 bits pseudoaleatória
+        chave_bits = GenerateRandonBits(8)
+        return "".join(str(b) for b in chave_bits)
 
 
 def CriptografaCaracter(c, key):
-    print(f"C ORD: {ord(c)}")
-    print(f"int(key, 2)) % 255: {int(key, 2) % 255}")
+    logger.debug("C ORD: %s", ord(c))
+    logger.debug("int(key, 2) % 255: %s", int(key, 2) % 255)
 
     c = (ord(c) + int(key, 2)) % 255
-    print(f"criptografa caractere: {c}")
-    print(f"bin: {bin(c)}")
+    logger.debug("criptografa caractere: %s", c)
+    logger.debug("bin: %s", bin(c))
 
     return bin(c)
 
@@ -70,6 +88,6 @@ def CriptografaMensagem(SenhaFornecida):
         key = GeraChaveCompartilhada()
         Keys.append(key)
         Msg_Cript.append(CriptografaCaracter(i, key))
-        print(f"CriptografaMensagemKey: {key}")
-        print(f"CriptografaMensagemMSG: {Msg_Cript}")
+        logger.debug("CriptografaMensagemKey: %s", key)
+        logger.debug("CriptografaMensagemMSG: %s", Msg_Cript)
     return (Msg_Cript, Keys)
