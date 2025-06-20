@@ -27,13 +27,13 @@ else:
 # remove aspas extras e quebras de linha caso venham de variáveis de ambiente
 password = password.strip().strip('"').strip("'")
 
-logger.info("Mensagem recebida: %s", SenhaFornecida)
+logger.info("Mensagem recebida: %s", password)
 logger.info("Chaves: %s", keys)
 logger.info("Msg Criptografada: %s", Msg_Cript)
 logger.info("Msg Descriptografada: %s", Msg_Descript)
 
 # Criptografa usando OTP para cada caracter
-Msg_Cript, keys = criptografar.CriptografaMensagem(SenhaFornecida)
+Msg_Cript, keys = criptografar.CriptografaMensagem(password)
 print(f"Chaves: {keys}")
 print(f"Msg Criptografada: {Msg_Cript}")
 
