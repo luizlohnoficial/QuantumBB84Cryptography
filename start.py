@@ -9,6 +9,7 @@ logging.basicConfig(level=logging.INFO, format='[%(levelname)s] %(message)s')
 logger = logging.getLogger(__name__)
 
 logger.info("Iniciando processo de criptografia")
+password = "Login123"
 if password:
     logger.info("Senha obtida da variável de ambiente")
 else:
