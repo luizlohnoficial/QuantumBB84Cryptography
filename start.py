@@ -3,8 +3,8 @@ import os
 import criptografar
 import descriptografar
 
-
-password = os.getenv("PASSWORD")
+#os.getenv("PASSWORD")
+password = "Testando12
 if password is None:
     password = input("Digite uma palavra para enviar: ")
 SenhaFornecida = list(password)
